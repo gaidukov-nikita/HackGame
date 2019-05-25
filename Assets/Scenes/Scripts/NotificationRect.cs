@@ -39,8 +39,8 @@ namespace ASpyInHarmWay
 
         protected IEnumerator ShowLabel()
         {
-            _tween = loadingimg2.DOScale(1.2f, .5f).SetLoops(-1).SetLoops(-1, LoopType.Yoyo);
-            _tween2 = loadingimg1.DORotate(new Vector3(0f, 0f, -360f), 1.5f, RotateMode.FastBeyond360).SetLoops(-1).SetEase(Ease.Linear);
+            _tween = loadingimg2.DOScale(1.2f, .5f).SetLoops(-1).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.OutSine);
+            _tween2 = loadingimg1.DORotate(new Vector3(0f, 0f, -360f), 5.5f, RotateMode.FastBeyond360).SetLoops(-1).SetEase(Ease.Linear);
 
             do
             {
@@ -50,11 +50,12 @@ namespace ASpyInHarmWay
             } while (NotifLabel.maxVisibleCharacters != NotifLabel.text.Length);
 
             yield return new WaitForSeconds(Time.fixedDeltaTime * 10f);
+            
+            yield return new WaitForSeconds(2.0f);
 
             NotifLabel.DOColor(Color.clear, NotifTime);
 
-  
-
+            
             yield return new WaitForSeconds(NotifTime);
 
             _tween.Kill();

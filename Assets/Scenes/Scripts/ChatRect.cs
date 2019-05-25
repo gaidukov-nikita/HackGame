@@ -19,6 +19,7 @@ namespace ASpyInHarmWay
             public messagetype messagetype;
             public AnswerEvent[] answers;
             public minigametype minigame;
+            public int nextid = -1;
         }
 
         [System.Serializable]
@@ -47,6 +48,7 @@ namespace ASpyInHarmWay
 
         [SerializeField]
         protected float chatDeltaY;
+        private float _chatDeltaY = 0;
 
         int currentmessageId = -1;
         Dictionary<int, MessageEvent> MessagesObj;
@@ -78,7 +80,9 @@ namespace ASpyInHarmWay
         {
             currMessage = me;
             if (lastmsgRect != null)
-            chatDeltaY = lastmsgRect.sizeDelta.y;
+                _chatDeltaY = chatDeltaY - lastmsgRect.sizeDelta.y;
+            else
+                _chatDeltaY = chatDeltaY;
 
             switch (currMessage.messagetype)
             {
@@ -93,13 +97,14 @@ namespace ASpyInHarmWay
                     }
                     else
                     {
-                        lastmsgRect = currChatMsg.thisrect;
                         currChatMsg.PrepareMessage(me.message, 
                             
                             new Vector2(currChatMsg.thisrect.localPosition.x,
                             lastmsgRect.localPosition.y
-                            +chatDeltaY));
-                       
+                            +_chatDeltaY));
+
+                        lastmsgRect = currChatMsg.thisrect;
+
                     }
                     currChatMsg.onMessageEnd.Add(ConfirmMessageEnd);
                     break;
@@ -114,9 +119,12 @@ namespace ASpyInHarmWay
                     }
                     else
                     {
+                      
                         currChatMsg.PrepareMessage(me.message, new Vector2(currChatMsg.thisrect.localPosition.x,
                             lastmsgRect.localPosition.y
-                            + chatDeltaY));
+                            + _chatDeltaY));
+
+                        lastmsgRect = currChatMsg.thisrect;
                     }
 
                     currAnswers.SetAnswers(me.answers[0].answer, me.answers[1].answer);
@@ -136,9 +144,12 @@ namespace ASpyInHarmWay
                     }
                     else
                     {
+                        
                         currChatMsg.PrepareMessage(me.message, new Vector2(currChatMsg.thisrect.localPosition.x,
                             lastmsgRect.localPosition.y
-                            + chatDeltaY));
+                            + _chatDeltaY));
+
+                        lastmsgRect = currChatMsg.thisrect;
                     }
 
                     break;
@@ -167,7 +178,10 @@ namespace ASpyInHarmWay
 
         private void ConfirmMessageEnd() {
 
-            currentmessageId++;
+            if (currMessage.nextid == -1)
+                currentmessageId++;
+            else
+                currentmessageId = currMessage.nextid;
             GameManager.Instance.ConfirmMessage();
 
         }

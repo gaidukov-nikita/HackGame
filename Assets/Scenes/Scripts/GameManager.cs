@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +16,9 @@ namespace ASpyInHarmWay
         protected STATES GameState { get; set; }
 
         protected ChatRect.MessageEvent MessageEvent;
-        
 
+        private int currentPulse;
+        
         #region editor
 
         [SerializeField]
@@ -34,6 +36,9 @@ namespace ASpyInHarmWay
         [SerializeField]
         protected Image cover;
 
+        [SerializeField] 
+        protected TextMeshProUGUI pulseLabel;
+
         #endregion
 
         private void Awake()
@@ -44,9 +49,8 @@ namespace ASpyInHarmWay
         void Start()
         {
             Application.targetFrameRate = 60;
-
+            currentPulse = 80;
             StartCoroutine(GameStartSeq());
-            
         }
 
         protected void Update()
@@ -95,9 +99,17 @@ namespace ASpyInHarmWay
         public void showCover()
         {
             StartCoroutine(coverRutine(1.0f));
-
         }
 
+        public void changePulse(int newDelta)
+        {
+            currentPulse += newDelta;
+            pulseLabel.text = currentPulse.ToString();
+            if (currentPulse > 160)
+            {
+                NotifRect.SetDeathLabel();
+            }
+        }
         
         protected IEnumerator GameStartSeq()
         {

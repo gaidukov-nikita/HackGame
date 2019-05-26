@@ -25,7 +25,8 @@ namespace ASpyInHarmWay
 
 
         private int answ1id, answs2id;
-        private int choiseid;
+        private int pulse1, pulse2;
+        private int choiseid, pulsechoise;
 
         protected void Awake()
         {
@@ -45,6 +46,12 @@ namespace ASpyInHarmWay
             this.answs2id = answ2id;
         }
 
+        public void SetPulseChanges(int p1, int p2)
+        {
+            pulse1 = p1;
+            pulse2 = p2;
+        }
+
         public void ShowAnswers(bool state)
         {
             CvGroup.DOFade((state)?1f:0f, 1.75f);
@@ -56,9 +63,11 @@ namespace ASpyInHarmWay
             {
                 case 1:
                     choiseid = answ1id;
+                    pulsechoise = pulse1;
                     break;
                 case 2:
                     choiseid = answs2id;
+                    pulsechoise = pulse2;
                     break;
             }
         }
@@ -67,6 +76,11 @@ namespace ASpyInHarmWay
         {
             return choiseid;
         } 
+
+        public int GetPulseChoise()
+        {
+            return pulsechoise;
+        }
     }
 }
 

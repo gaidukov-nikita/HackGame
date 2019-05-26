@@ -223,6 +223,7 @@
     <Compile Include="Assets\FantomPlugin\FantomLib\Scripts\UI\ProgressImageFill.cs" />
     <Compile Include="Assets\FantomPlugin\FantomLib\Scripts\UI\ToggleButton.cs" />
     <Compile Include="Assets\FantomPlugin\FantomLib\Scripts\UI\ToggleObject.cs" />
+    <Compile Include="Assets\Lamp puzzle\Scripts\LampPuzzle.cs" />
     <Compile Include="Assets\Scenes\Scripts\AnswersRect.cs" />
     <Compile Include="Assets\Scenes\Scripts\ChatMessage.cs" />
     <Compile Include="Assets\Scenes\Scripts\ChatRect.cs" />

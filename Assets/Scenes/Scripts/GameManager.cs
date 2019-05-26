@@ -24,6 +24,8 @@ namespace ASpyInHarmWay
         [SerializeField]
         protected ChatRect ChatterBox;
         [SerializeField]
+        protected LampPuzzle LampPuzzle;
+        [SerializeField]
         protected NotificationRect NotifRect;
 
         [SerializeField]
@@ -44,6 +46,9 @@ namespace ASpyInHarmWay
         private void Awake()
         {
             Instance = this;
+            LampPuzzle.OnMiniGameStart = MinigameLamp;
+            LampPuzzle.OnMiniGameEnd = ConfirmMessage;
+            cover.raycastTarget = false;
         }
 
         void Start()
@@ -53,13 +58,21 @@ namespace ASpyInHarmWay
             StartCoroutine(GameStartSeq());
         }
 
+        void MinigameLamp()
+        {
+            showCover();
+            LampPuzzle.gameObject.SetActive(true);
+            LampPuzzle.CVGroup.alpha = 1;
+        }
+
         protected void Update()
         {
             switch (GameState)
             {
                 case STATES.WAITINGFORMESSAGE:
+                case STATES.INMINIGAME:
+              
 
-                 
                     MessageEvent = ChatterBox.GetNextMessage();
 
                     ChatterBox.ProcessMessage(MessageEvent);
@@ -68,13 +81,11 @@ namespace ASpyInHarmWay
 
                 case STATES.ANSWERMESSAGE:
 
-                    MessageEvent = ChatterBox.GetNextMessage();
+                    ChatRect.MessageEvent me = new ChatRect.MessageEvent();
+                    me.message = ChatterBox.GetAnswerString();
+                    me.messagetype = ChatRect.messagetype.messageback;
 
-                    ChatterBox.ProcessMessage(MessageEvent);
-
-                    break;
-
-                case STATES.INMINIGAME:
+                    ChatterBox.ProcessMessage(me);
 
                     break;
 
@@ -92,8 +103,11 @@ namespace ASpyInHarmWay
 
         protected IEnumerator coverRutine(float endValue)
         {
+            cover.raycastTarget = true;
             cover.DOFade(endValue, 0.5f);
             yield return new WaitForSeconds(0.5f);
+            
+
         }
         
         public void showCover()
@@ -126,7 +140,7 @@ namespace ASpyInHarmWay
         
         protected IEnumerator BetterySeq()
         {
-            float batteryLife = 6.0f;
+            float batteryLife = 60*5.0f;
             
             
             yield return new WaitForSeconds(batteryLife/3.0f);
@@ -161,7 +175,7 @@ namespace ASpyInHarmWay
         {
             ChatterBox.ConfirmAnswer();
 
-            GameState = STATES.ANSWERMESSAGE;
+            GameState = STATES.WAITINGFORMESSAGE;
         }
 
         public void ConfirmMessage()

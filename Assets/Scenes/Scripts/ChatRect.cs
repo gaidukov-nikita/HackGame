@@ -78,6 +78,11 @@ namespace ASpyInHarmWay
 
             return MessagesObj[currentmessageId];
         }
+
+        public string GetAnswerString()
+        {
+            return currAnswers.GetStringAnswer();
+        }
          
 
         public void ProcessMessage(MessageEvent me)
@@ -134,7 +139,8 @@ namespace ASpyInHarmWay
 
                     if (lastmsgRect == null)
                     {
-                        // currChatMsg.thisrect = 
+                        lastmsgRect = currChatMsg.thisrect;
+                        currChatMsg.PrepareMessage(me.message, lastmsgRect.localPosition);
                     }
                     else
                     {
@@ -158,7 +164,8 @@ namespace ASpyInHarmWay
 
                     if (lastmsgRect == null)
                     {
-                        // currChatMsg.thisrect = 
+                        lastmsgRect = currChatMsg.thisrect;
+                        currChatMsg.PrepareMessage(me.message, lastmsgRect.localPosition);
                     }
                     else
                     {
@@ -175,6 +182,21 @@ namespace ASpyInHarmWay
 
                     //
                     Debug.Log("Show minigame via other gameobject");
+                    switch (me.minigame)
+                    {
+                        case minigametype.none:
+                            break;
+                        case minigametype.game1:
+                            LampPuzzle.OnMiniGameStart();
+                            break;
+                        case minigametype.game2:
+                            break;
+                        case minigametype.game3:
+                            break;
+                        default:
+                            break;
+                    }
+
 
                     break;
 
@@ -188,7 +210,7 @@ namespace ASpyInHarmWay
 
             //todo call here the --- gamemanager pulse changing
 
-            //currAnswers.GetPulseChoise();
+            GameManager.Instance.changePulse(currAnswers.GetPulseChoise());
 
             currAnswers.ShowAnswers(false);
         }

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ASpyInHarmWay
 {
@@ -13,6 +15,7 @@ namespace ASpyInHarmWay
         protected STATES GameState { get; set; }
 
         protected ChatRect.MessageEvent MessageEvent;
+        
 
         #region editor
 
@@ -20,6 +23,16 @@ namespace ASpyInHarmWay
         protected ChatRect ChatterBox;
         [SerializeField]
         protected NotificationRect NotifRect;
+
+        [SerializeField]
+        protected Image battery1;
+        [SerializeField]
+        protected Image battery2;
+        [SerializeField]
+        protected Image battery3;
+
+        [SerializeField]
+        protected Image cover;
 
         #endregion
 
@@ -68,18 +81,60 @@ namespace ASpyInHarmWay
             GameState = STATES.NONE;
         }
 
+        public void hideCover()
+        {
+            StartCoroutine(coverRutine(0.0f));
+        }
+
+        protected IEnumerator coverRutine(float endValue)
+        {
+            cover.DOFade(endValue, 0.5f);
+            yield return new WaitForSeconds(0.5f);
+        }
+        
+        public void showCover()
+        {
+            StartCoroutine(coverRutine(1.0f));
+
+        }
+
+        
         protected IEnumerator GameStartSeq()
         {
             yield return new WaitForEndOfFrame();
 
             NotifRect.SetNotifLabel();
 
-            yield return new WaitForSeconds(NotifRect.NotifTime);
+            yield return new WaitForSeconds(10.5f);
 
             GameState = STATES.WAITINGFORMESSAGE;
 
+            StartCoroutine(BetterySeq());
         }
+        
+        protected IEnumerator BetterySeq()
+        {
+            float batteryLife = 6.0f;
+            
+            
+            yield return new WaitForSeconds(batteryLife/3.0f);
 
+            battery3.DOFade(0.0f, 0.5f);
+            
+            yield return new WaitForSeconds(batteryLife/3.0f);
+            
+            battery2.DOFade(0.0f, 0.5f);
+            
+            yield return new WaitForSeconds(batteryLife/3.0f);
+            
+            battery1.DOFade(0.0f, 0.5f);
+
+            yield return new WaitForSeconds(1.0f);
+
+            ChatterBox.gameObject.SetActive(false);
+            NotifRect.SetDeathLabel();
+        }
+        
         protected IEnumerator GameStateAnswerMessage()
         {
             do

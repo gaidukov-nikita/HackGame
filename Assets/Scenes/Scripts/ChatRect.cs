@@ -47,6 +47,9 @@ namespace ASpyInHarmWay
 
         [SerializeField]
         protected float chatDeltaY;
+        protected float _chatdeltay;
+        protected float totalDelta;
+        protected float targetDelta;
 
         int currentmessageId = -1;
         Dictionary<int, MessageEvent> MessagesObj;
@@ -60,6 +63,9 @@ namespace ASpyInHarmWay
             {
                 MessagesObj.Add(item.id, item);
             }
+
+            targetDelta = thisrect.rect.y;
+            Debug.Log(targetDelta);
         }
 
 
@@ -78,7 +84,23 @@ namespace ASpyInHarmWay
         {
             currMessage = me;
             if (lastmsgRect != null)
-            chatDeltaY = lastmsgRect.sizeDelta.y;
+            {
+                thisrect.offsetMax = new Vector3(0f, thisrect.offsetMax.y - chatDeltaY);
+                _chatdeltay = chatDeltaY - lastmsgRect.sizeDelta.y;
+            }
+                
+            else
+            {
+                _chatdeltay = chatDeltaY;
+
+              
+  
+            }
+               
+
+            totalDelta += _chatdeltay;
+
+            Debug.Log(totalDelta);
 
             switch (currMessage.messagetype)
             {
@@ -90,16 +112,18 @@ namespace ASpyInHarmWay
                     {
                         lastmsgRect = currChatMsg.thisrect;
                         currChatMsg.PrepareMessage(me.message, lastmsgRect.localPosition);
+
                     }
                     else
                     {
-                        lastmsgRect = currChatMsg.thisrect;
                         currChatMsg.PrepareMessage(me.message, 
                             
                             new Vector2(currChatMsg.thisrect.localPosition.x,
                             lastmsgRect.localPosition.y
-                            +chatDeltaY));
-                       
+                            + _chatdeltay));
+
+                        lastmsgRect = currChatMsg.thisrect;
+
                     }
                     currChatMsg.onMessageEnd.Add(ConfirmMessageEnd);
                     break;
@@ -116,7 +140,9 @@ namespace ASpyInHarmWay
                     {
                         currChatMsg.PrepareMessage(me.message, new Vector2(currChatMsg.thisrect.localPosition.x,
                             lastmsgRect.localPosition.y
-                            + chatDeltaY));
+                            + _chatdeltay));
+
+                        lastmsgRect = currChatMsg.thisrect;
                     }
 
                     currAnswers.SetAnswers(me.answers[0].answer, me.answers[1].answer);
@@ -138,7 +164,9 @@ namespace ASpyInHarmWay
                     {
                         currChatMsg.PrepareMessage(me.message, new Vector2(currChatMsg.thisrect.localPosition.x,
                             lastmsgRect.localPosition.y
-                            + chatDeltaY));
+                            + _chatdeltay));
+
+                        lastmsgRect = currChatMsg.thisrect;
                     }
 
                     break;

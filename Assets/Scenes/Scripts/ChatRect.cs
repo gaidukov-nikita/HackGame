@@ -26,6 +26,7 @@ namespace ASpyInHarmWay
         {
             public int id;
             public string answer;
+            public int pulseChange = 0;
         }
 
         protected RectTransform thisrect;
@@ -119,6 +120,7 @@ namespace ASpyInHarmWay
                     }
 
                     currAnswers.SetAnswers(me.answers[0].answer, me.answers[1].answer);
+                    currAnswers.SetPulseChanges(me.answers[0].pulseChange, me.answers[1].pulseChange);
                     currAnswers.SetAnswersIds(me.answers[0].id, me.answers[1].id);
                     currChatMsg.onMessageEnd.Add(ConfirmMessageEndWithAnswers);
 
@@ -155,6 +157,11 @@ namespace ASpyInHarmWay
         public void ConfirmAnswer()
         {
             currentmessageId = currAnswers.GetAnswerId();
+
+            //todo call here the --- gamemanager pulse changing
+
+            //currAnswers.GetPulseChoise();
+
             currAnswers.ShowAnswers(false);
         }
 

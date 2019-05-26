@@ -23,10 +23,10 @@ namespace ASpyInHarmWay
         [SerializeField]
         protected CanvasGroup CvGroup;
 
-
+        private string answ1, answ2;
         private int answ1id, answs2id;
         private int pulse1, pulse2;
-        private int choiseid, pulsechoise;
+        private int choiseid, pulsechoise; string  curransw;
 
         protected void Awake()
         {
@@ -35,6 +35,8 @@ namespace ASpyInHarmWay
 
         public void SetAnswers(string answ1, string answ2)
         {
+            this.answ1 = answ1;
+            this.answ2 = answ2;
             Answer1.text = answ1;
             Answer2.text = answ2;
         }
@@ -64,10 +66,12 @@ namespace ASpyInHarmWay
                 case 1:
                     choiseid = answ1id;
                     pulsechoise = pulse1;
+                    curransw = answ1;
                     break;
                 case 2:
                     choiseid = answs2id;
                     pulsechoise = pulse2;
+                    curransw = answ2;
                     break;
             }
         }
@@ -80,6 +84,11 @@ namespace ASpyInHarmWay
         public int GetPulseChoise()
         {
             return pulsechoise;
+        }
+
+        public string GetStringAnswer()
+        {
+            return curransw;
         }
     }
 }

@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using FantomLib;
 using TMPro;
+using DG.Tweening;
 
 public class LampPuzzle : MonoBehaviour
 {
     #region Editor only
     [Header("To make this work change the AndroidManifest for the Fantom Plugin")]
     [SerializeField]
-    protected CanvasGroup CVGroup;
+    public CanvasGroup CVGroup;
     [SerializeField]
     protected Image lampLight;
     [SerializeField]
@@ -50,6 +51,7 @@ public class LampPuzzle : MonoBehaviour
         luxVal = 100;
         holdTime = 0;
         curColor = Color.white;
+        CVGroup.alpha = 0;
     }
 
     private void Start()
@@ -112,7 +114,7 @@ public class LampPuzzle : MonoBehaviour
 
                     yield return new WaitForSeconds(3f);
 
-                    CVGroup.alpha = 0f; //todo fade
+                    CVGroup.DOFade(0f, 3f); //todo fade
 
                     yield return new WaitForSeconds(2f);
 

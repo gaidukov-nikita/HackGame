@@ -19,7 +19,6 @@ namespace ASpyInHarmWay
             public messagetype messagetype;
             public AnswerEvent[] answers;
             public minigametype minigame;
-            public int nextid = -1;
         }
 
         [System.Serializable]
@@ -48,7 +47,9 @@ namespace ASpyInHarmWay
 
         [SerializeField]
         protected float chatDeltaY;
-        private float _chatDeltaY = 0;
+        protected float _chatdeltay;
+        protected float totalDelta;
+        protected float targetDelta;
 
         int currentmessageId = -1;
         Dictionary<int, MessageEvent> MessagesObj;
@@ -62,6 +63,9 @@ namespace ASpyInHarmWay
             {
                 MessagesObj.Add(item.id, item);
             }
+
+            targetDelta = thisrect.rect.y;
+            Debug.Log(targetDelta);
         }
 
 
@@ -74,15 +78,34 @@ namespace ASpyInHarmWay
 
             return MessagesObj[currentmessageId];
         }
+
+        public string GetAnswerString()
+        {
+            return currAnswers.GetStringAnswer();
+        }
          
 
         public void ProcessMessage(MessageEvent me)
         {
             currMessage = me;
             if (lastmsgRect != null)
-                _chatDeltaY = chatDeltaY - lastmsgRect.sizeDelta.y;
+            {
+                thisrect.offsetMax = new Vector3(0f, thisrect.offsetMax.y - chatDeltaY);
+                _chatdeltay = chatDeltaY - lastmsgRect.sizeDelta.y;
+            }
+                
             else
-                _chatDeltaY = chatDeltaY;
+            {
+                _chatdeltay = chatDeltaY;
+
+              
+  
+            }
+               
+
+            totalDelta += _chatdeltay;
+
+            Debug.Log(totalDelta);
 
             switch (currMessage.messagetype)
             {
@@ -94,6 +117,7 @@ namespace ASpyInHarmWay
                     {
                         lastmsgRect = currChatMsg.thisrect;
                         currChatMsg.PrepareMessage(me.message, lastmsgRect.localPosition);
+
                     }
                     else
                     {
@@ -101,7 +125,7 @@ namespace ASpyInHarmWay
                             
                             new Vector2(currChatMsg.thisrect.localPosition.x,
                             lastmsgRect.localPosition.y
-                            +_chatDeltaY));
+                            + _chatdeltay));
 
                         lastmsgRect = currChatMsg.thisrect;
 
@@ -115,14 +139,14 @@ namespace ASpyInHarmWay
 
                     if (lastmsgRect == null)
                     {
-                        // currChatMsg.thisrect = 
+                        lastmsgRect = currChatMsg.thisrect;
+                        currChatMsg.PrepareMessage(me.message, lastmsgRect.localPosition);
                     }
                     else
                     {
-                      
                         currChatMsg.PrepareMessage(me.message, new Vector2(currChatMsg.thisrect.localPosition.x,
                             lastmsgRect.localPosition.y
-                            + _chatDeltaY));
+                            + _chatdeltay));
 
                         lastmsgRect = currChatMsg.thisrect;
                     }
@@ -140,14 +164,14 @@ namespace ASpyInHarmWay
 
                     if (lastmsgRect == null)
                     {
-                        // currChatMsg.thisrect = 
+                        lastmsgRect = currChatMsg.thisrect;
+                        currChatMsg.PrepareMessage(me.message, lastmsgRect.localPosition);
                     }
                     else
                     {
-                        
                         currChatMsg.PrepareMessage(me.message, new Vector2(currChatMsg.thisrect.localPosition.x,
                             lastmsgRect.localPosition.y
-                            + _chatDeltaY));
+                            + _chatdeltay));
 
                         lastmsgRect = currChatMsg.thisrect;
                     }
@@ -158,6 +182,21 @@ namespace ASpyInHarmWay
 
                     //
                     Debug.Log("Show minigame via other gameobject");
+                    switch (me.minigame)
+                    {
+                        case minigametype.none:
+                            break;
+                        case minigametype.game1:
+                            LampPuzzle.OnMiniGameStart();
+                            break;
+                        case minigametype.game2:
+                            break;
+                        case minigametype.game3:
+                            break;
+                        default:
+                            break;
+                    }
+
 
                     break;
 
@@ -171,17 +210,14 @@ namespace ASpyInHarmWay
 
             //todo call here the --- gamemanager pulse changing
 
-            //currAnswers.GetPulseChoise();
+            GameManager.Instance.changePulse(currAnswers.GetPulseChoise());
 
             currAnswers.ShowAnswers(false);
         }
 
         private void ConfirmMessageEnd() {
 
-            if (currMessage.nextid == -1)
-                currentmessageId++;
-            else
-                currentmessageId = currMessage.nextid;
+            currentmessageId++;
             GameManager.Instance.ConfirmMessage();
 
         }

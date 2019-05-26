@@ -634,6 +634,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: LightPuzzle
       objectReference: {fileID: 0}
+    - target: {fileID: 5685484711554789230, guid: 4551691b7a77b7d43b32502992408eba,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5685484711554789234, guid: 4551691b7a77b7d43b32502992408eba,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -738,6 +743,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685484711856741919, guid: 4551691b7a77b7d43b32502992408eba,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -22.50003
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4551691b7a77b7d43b32502992408eba, type: 3}
